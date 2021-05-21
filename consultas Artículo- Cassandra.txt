@@ -1,0 +1,39 @@
+1. Obtener un listado de los empleados del hotel, con todos sus datos.
+
+select * from hotel.empleado;
+
+2. Obtener el nombre del jefe del servicio de "Restaurante".
+
+select nombre from hotel.empleado_by_servicio
+where descripcion="restaurante";
+
+
+3. Obtener el listado de los clientes que ocupen o hayan ocupado alguna vez habitaciones de los dos tipos (individual y doble)
+
+select
+ dni,
+ nombre,
+ apellidos
+ from hotel.habitacion_by_precio_reserva re
+ where tipo in ('individual','doble') ALLOW FILTERING;
+ 
+4.Incrementar en un 10% el sueldo del empleado de "limpieza" que más habitaciones haya limpiado
+ 
+spark.sql(update hotel.empleado set sueldo = sueldo*1.1 where numreg in
+(select numreg  from hotel.limpieza 
+group by numreg
+having count(*) =(
+select max (num) from (
+select count(*)as num from hotel.limpieza 
+group by numreg)t1)
+));
+
+
+5. Obtener el número de habitación, tipo y precio de las habitaciones que estén ocupadas en la actualidad (no tienen fecha de salida).
+
+select
+ numero,
+ tipo,
+ precio
+ from hotel.habitacion_by_precio_reserva re
+ where re.salida is null;
