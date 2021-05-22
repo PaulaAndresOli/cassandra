@@ -1,0 +1,36 @@
+#creación keyspace
+
+CREATE KEYSPACE hotel WITH replication = {'class':'SimpleStrategy','replication_factor':1};
+
+#creación de tablas
+
+CREATE TABLE IF NOT EXISTS hotel.Empleado (NumReg int,Nombre text, Incorporacion date,Sueldo int,CodS int, PRIMARY KEY(Numreg, Nombre)) WITH CLUSTERING ORDER BY (Nombre DESC);
+CREATE TABLE IF NOT EXISTS hotel.Habitacion_by_precio_reserva (DNI text, NUMERO int,NOMBRE text,APELLIDOS text,TIPO TEXT,PRECIO int,ENTRADA date,SALIDA date, PRIMARY KEY(DNI, tipo,NOMBRE, APELLIDOS)) WITH CLUSTERING ORDER BY (tipo ASC, NOMBRE DESC, APELLIDOS DESC);
+CREATE TABLE IF NOT EXISTS hotel.empleado_by_servicio (Cods int, Descripcion text,Numreg int, Nombre text, PRIMARY KEY(Cods, Nombre)) WITH CLUSTERING ORDER BY (Nombre DESC) ;
+CREATE TABLE IF NOT EXISTS hotel.limpieza (Numreg int, Numero int,Fecha date, PRIMARY KEY(Numreg, Numero, Fecha)) ;
+---------------------------------
+#insertar datos de manera manual
+
+
+INSERT INTO Empleado (NumReg, Nombre, Incorporacion, Sueldo, Cods);
+VALUES ();
+
+INSERT INTO hotel.empleado4(Numreg, Nombre,Incorporacion,Sueldo, CodS)
+VALUES (1,'Luisa Blanco Baroja','1996-10-23',1000,NULL);
+INSERT INTO hotel.empleado4(Numreg, Nombre,Incorporacion,Sueldo, CodS)
+VALUES (2,'Fernando Serrano Vázquez','1996-10-23',1000,NULL);
+INSERT INTO hotel.empleado4(Numreg, Nombre,Incorporacion,Sueldo, CodS)
+VALUES (3,'Manuel Pérez Calo','2000-01-01',900,NULL);
+INSERT INTO hotel.empleado4(Numreg, Nombre,Incorporacion,Sueldo, CodS)
+VALUES (4,'Ana Troncoso Calvo','2000-01-01',900,NULL);
+INSERT INTO hotel.empleado4(Numreg, Nombre,Incorporacion,Sueldo, CodS)
+VALUES (5,'Alba Troncoso Calvo','2002-09-13',NULL,NULL);
+
+#insertar datos desde un archivo .csv
+
+docker cp C:\Empleado_servicio.csv cassandra:/Empleado_servicio.csv
+COPY hotel.empleado_by_servicio (cods, nombre, descripcion, numreg) FROM '/Empleado_by_servicio.csv' WITH DELIMITER=';' AND HEADER = true ;
+
+----------------------------------
+
+
